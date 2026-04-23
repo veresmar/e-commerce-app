@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import TaskFilter from "./Filter";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
@@ -7,49 +8,130 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import { Typography } from "@mui/material";
 
+
+function getFilteredTasks(filter: 'all' | 'active' | 'completed', tasksList: Task[]) {
+  
+  if (filter == 'completed') {
+    return tasksList.filter((task) => task.done == true)
+  } else if (filter == 'active') {
+     return tasksList.filter((task) => task.done == false)
+  } else {
+    return tasksList
+  }
+}
+
+type Task = {
+    id: number, // new date - генерим id, ИЛИ uuid (библиотека)
+    text: string,
+    done: boolean
+  }
+  
 export default function ToDo() {
   const [newTask, setNewTask] = useState('');
-  const [tasksList, setTasksList] = useState<string[]>([]);
-  function addTask() {
-    setTasksList([...tasksList, newTask])
+  const [tasksList, setTasksList] = useState<Task[]>([]);
+  const [checked, setChecked] = useState([0]);
+  const [filter, setFilter] = useState('all')
+
+  function addTask(e: React.ChangeEvent<HTMLInputElement>) {
+    if (newTask.length > 0) { 
+      const newTaskObj: Task = {id: new Date(), text: newTask, done: false};
+      setTasksList([...tasksList, newTaskObj])
+    } 
+    setNewTask(e.target.value)
   }
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setNewTask(e.target.value)
+    // if (tasksList.length == 0) {
+    //   <p>no tasks</p>
+    // }
   }
+  function removeTask(taskToRemove: Task) {
+    setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id))
+  }
+
+  const handleToggle = (task: Task) => () => {
+    // const currentIndex = checked.indexOf(task.id);
+    // const newChecked = [...checked];
+    // if (currentIndex === -1) {
+    //   newChecked.push(task);
+    //   console.log('check')
+    // } else {
+    //   newChecked.splice(currentIndex, 1);
+    // }
+    // setChecked(newChecked);
+  };
+  
+  const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
+  function handleFilter(filterButton) { // filterButton = 'all' | 'active' | 'completed'
+   
+    setFilter(filterButton)
+  }
+  console.log(filteredTasksList)
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(tasksList));
+  }, [tasksList]);
+
+
   return (
     <>
-      <TextField variant="standard" value={newTask} onChange={handleChange}/>
+      <TextField type='text' variant="standard" value={newTask} onChange={handleChange} placeholder = {newTask ? " " : "please add a task"}/>
       {/* <input type="text" value={newTask} onChange={handleChange}/> */}
-      <Button variant="outlined" onClick={addTask}>add</Button>
+      <Button variant="outlined" onClick={addTask} color="secondary" >add</Button>
       {/* <button onClick={addTask}>add</button> */}
       {/* <ol>
         {tasksList.map((task) =>  <li><div className="card">{task}</div></li>)}
       </ol>  */}
+      <br></br>
+      <br></br>
+      <TaskFilter filterAll={() => handleFilter('all')} filterActive={() => handleFilter('active')} filterCompleted={() => handleFilter('completed')}/>
+      <br></br>
 
+      {filteredTasksList.length > 0 ?
       <List dense component="div" role="list">
-        {tasksList.map((task: string) => {
+         {filteredTasksList.map((task) => {
           const labelId = `transfer-list-item-${task}-label`;
 
           return (
             <ListItemButton
-              key={task}
+              key={task.id}
               role="listitem"
-              // onClick={handleToggle(task)} // - нажатие на всю поверхность задачи
+              onClick={() => handleToggle(task)} // - нажатие на всю поверхность задачи
+              sx={{
+                backgroundColor: "#ffccff",
+                "&:hover": {
+                  backgroundColor: "#ffb3ff",
+                  textDecoration: 'line-through'
+                }
+              }}
             >
               <ListItemIcon>
                 <Checkbox
-                  // checked={checked.includes(value)}
+                  checked={checked.includes(task)}
                   tabIndex={-1}
                   disableRipple
-                  
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${task}`} />
+              <ListItemText id={labelId} primary={`List item: ${task.text}`} />
+    
+              <Button onClick={() => removeTask(task)} color="secondary" >
+                <Tooltip title="Delete">
+                  <IconButton>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Button>
+
             </ListItemButton>
           );
         })}
       </List>
+         : <Typography variant="h5">no tasks yet</Typography>}
     </>
   )
 }
