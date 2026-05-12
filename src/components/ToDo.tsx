@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import TaskFilter from "./Filter";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import { Typography } from "@mui/material";
-
 import ListItem from "./ListItem";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
-import { v4 as uuidv4 } from "uuid";
 
+
+
+type Filter =  "all" | "active" | "completed";
 function getFilteredTasks(
-  filter: "all" | "active" | "completed",
+  filter: Filter, // filter — variable name,  Filter — variable type
   tasksList: Task[],
 ) {
   if (filter == "completed") {
@@ -64,10 +68,9 @@ export default function ToDo() {
   };
 
   const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
-  function handleFilter(filterButton) {
+  function handleFilter(filter: Filter) {
     // filterButton = 'all' | 'active' | 'completed'
-
-    setFilter(filterButton);
+    setFilter(filter); // passes the value into useState
   }
   console.log(filteredTasksList);
 
@@ -77,45 +80,64 @@ export default function ToDo() {
 
   return (
     <>
-      <TextField
-        type="text"
-        variant="standard"
-        value={newTask}
-        onChange={handleChange}
-        placeholder={newTask ? " " : "please add a task"}
-      />
-      {/* <input type="text" value={newTask} onChange={handleChange}/> */}
-      <Button variant="outlined" onClick={addTask} color="secondary">
-        add
-      </Button>
+      <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
+      
+     
+        <Stack
+          direction="column"
+          component="main"
+          spacing={2}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: '50%',
+            margin: '0 auto',
+          }}
+        >
+
+          <Stack component="section" direction="row">
+            <TextField
+              type="text"
+              variant="standard"
+              value={newTask}
+              onChange={handleChange}
+              placeholder={newTask ? " " : "please add a task"}
+            />
+            {/* <input type="text" value={newTask} onChange={handleChange}/> */}
+            <Button sx={{ mb: 4 }} variant="outlined" onClick={addTask} color="secondary">
+              add
+            </Button>
+          </Stack>
+
+          <Stack component="section">
+            <TaskFilter
+              filterAll={() => handleFilter("all")}
+              filterActive={() => handleFilter("active")}
+              filterCompleted={() => handleFilter("completed")}
+            />
+          </Stack>
+          <Stack component="section">
+            {filteredTasksList.length > 0 ? (
+              <List dense component="div" role="list">
+                {filteredTasksList.map((task) => (
+                  // <ListItem id={task.id} text={task.text} done={task.done} />
+                  <ListItem
+                    task={task}
+                    handleToggle={handleToggle}
+                    removeTask={removeTask}
+                    checked={checked}
+                  /> // { task: { id: string, text: string; done: boolean; } }
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body1">no tasks yet</Typography>
+            )}
+          </Stack>
+        </Stack>
       {/* <button onClick={addTask}>add</button> */}
       {/* <ol>
         {tasksList.map((task) =>  <li><div className="card">{task}</div></li>)}
       </ol>  */}
-      <br></br>
-      <br></br>
-      <TaskFilter
-        filterAll={() => handleFilter("all")}
-        filterActive={() => handleFilter("active")}
-        filterCompleted={() => handleFilter("completed")}
-      />
-      <br></br>
-
-      {filteredTasksList.length > 0 ? (
-        <List dense component="div" role="list">
-          {filteredTasksList.map((task) => (
-            // <ListItem id={task.id} text={task.text} done={task.done} />
-            <ListItem
-              task={task}
-              handleToggle={handleToggle}
-              removeTask={removeTask}
-              checked={checked}
-            /> // { task: { id: string, text: string; done: boolean; } }
-          ))}
-        </List>
-      ) : (
-        <Typography variant="h5">no tasks yet</Typography>
-      )}
     </>
   );
 }
