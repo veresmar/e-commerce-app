@@ -6,7 +6,6 @@ import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import { Typography } from "@mui/material";
 import ListItem from "./ListItem";
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
 
