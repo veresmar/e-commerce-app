@@ -3,9 +3,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { Button, Tooltip, IconButton } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
-
 /** так импортируются типы, чтобы сборщик проекта игнорировал эту строчку во время сборки (билда) в один js файл */
 import type { Task } from "./ToDo";
 
@@ -16,12 +14,11 @@ type ListItemProps = {
   checked: string[];
 };
 
-export default function ListItem(props: ListItemProps) {
+export default function Task(props: ListItemProps) {
   // ListItemProps.task.id - неправильно // props.task.id - правильно
   const labelId = `transfer-list-item-${props.task.id}-label`;
 
   return (
-    <>
       <ListItemButton
         key={props.task.id}
         role="listitem"
@@ -51,6 +48,5 @@ export default function ListItem(props: ListItemProps) {
           </Tooltip>
         </Button>
       </ListItemButton>
-    </>
   );
 }

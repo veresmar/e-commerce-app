@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import TaskFilter from "./Filter";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import TaskFilter from "./TaskFilter";
+import TaskInput from "./TaskInput";
+// import TextField from "@mui/material/TextField";
+// import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import { Typography } from "@mui/material";
-import ListItem from "./ListItem";
-import Box from '@mui/material/Box';
+import ListItem from "./Task";
 import Stack from '@mui/material/Stack';
-
-
 
 
 type Filter =  "all" | "active" | "completed";
@@ -27,30 +25,29 @@ function getFilteredTasks(
 }
 
 export type Task = {
-  id: string; // new date - генерим id, ИЛИ uuid (библиотека)
+  id: string; // new date from uuid (lib)
   text: string;
   done: boolean;
 };
 
 export default function ToDo() {
-  const [newTask, setNewTask] = useState("");
+  // const [newTask, setNewTask] = useState("");
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [checked, setChecked] = useState<string[]>([]);
   const [filter, setFilter] = useState("all");
 
-  function addTask(e: React.ChangeEvent<HTMLInputElement>) {
+  function addTask(newTask: string) {
     if (newTask.length > 0) {
       const newTaskObj: Task = { id: uuidv4(), text: newTask, done: false };
       setTasksList([...tasksList, newTaskObj]);
     }
-    setNewTask(e.target.value);
+    // setNewTask(e.target.value);
   }
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setNewTask(e.target.value);
-    // if (tasksList.length == 0) {
-    //   <p>no tasks</p>
-    // }
-  }
+
+ 
+  // function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  //   setNewTask(e.target.value);
+  // }
   function removeTask(taskToRemove: Task) {
     setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
   }
@@ -82,7 +79,6 @@ export default function ToDo() {
     <>
       <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
       
-     
         <Stack
           direction="column"
           component="main"
@@ -96,17 +92,21 @@ export default function ToDo() {
         >
 
           <Stack component="section" direction="row">
-            <TextField
+            
+              
+
+            {/* addTask без скобок () тк она будет вызываться потом (при клике на кнопку в дочернем компоненте ) */}
+            <TaskInput onAddTask={addTask}/> 
+            {/* <TextField
               type="text"
               variant="standard"
               value={newTask}
               onChange={handleChange}
               placeholder={newTask ? " " : "please add a task"}
             />
-            {/* <input type="text" value={newTask} onChange={handleChange}/> */}
             <Button sx={{ mb: 4 }} variant="outlined" onClick={addTask} color="secondary">
               add
-            </Button>
+            </Button> */}
           </Stack>
 
           <Stack component="section">
