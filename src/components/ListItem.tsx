@@ -41,16 +41,4 @@ export default function ListItem(props: ListItemProps) {
             disableRipple
           />
         </ListItemIcon>
-        <ListItemText id={labelId} primary={`List item: ${props.task.text}`} />
 
-        <Button onClick={() => props.removeTask(props.task)} color="secondary">
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </Button>
-      </ListItemButton>
-    </>
-  );
-}
