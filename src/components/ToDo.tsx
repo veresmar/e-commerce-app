@@ -12,6 +12,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Typography } from "@mui/material";
+import ToDoForm from "./ToDoForm";
+ 
 
 
 function getFilteredTasks(filter: 'all' | 'active' | 'completed', tasksList: Task[]) {
@@ -80,6 +82,7 @@ export default function ToDo() {
 
   return (
     <>
+      <ToDoForm />
       <TextField type='text' variant="standard" value={newTask} onChange={handleChange} placeholder = {newTask ? " " : "please add a task"}/>
       {/* <input type="text" value={newTask} onChange={handleChange}/> */}
       <Button variant="outlined" onClick={addTask} color="secondary" >add</Button>
