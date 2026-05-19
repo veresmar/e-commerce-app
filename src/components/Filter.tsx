@@ -9,12 +9,10 @@ type TaskFilter = {
 
 export default function TaskFilter({filterAll, filterActive, filterCompleted}: TaskFilter ) {
   return (
-    <>  
       <ButtonGroup variant="outlined" color="secondary" aria-label="Basic button group">
         <Button onClick={filterAll}> All</Button>
         <Button onClick={filterActive}> Active</Button>
         <Button onClick={filterCompleted}> Completed </Button>
       </ButtonGroup>
-    </>
   )
 }

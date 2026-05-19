@@ -8,7 +8,6 @@ export default function List(props: string[]) {
   const [tasksList, setTasksList] = useState<string[]>([]);
 
   return (
-    <>
        <List dense component="div" role="list">
           {tasksList.map((task: string) => {
             const labelId = `transfer-list-item-${task}-label`;
@@ -17,6 +16,5 @@ export default function List(props: string[]) {
             )
           })}
       </List>
-    </>
     )
   }
