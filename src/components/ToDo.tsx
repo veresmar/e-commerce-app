@@ -36,14 +36,14 @@ export type Task = {
 };
 
 export default function ToDo() {
-  const [newTask, setNewTask] = useState("");
+  const [newTaskTitle, setNewTask] = useState("");
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [checked, setChecked] = useState<string[]>([]);
   const [filter, setFilter] = useState("all");
 
   function addTask(e: React.ChangeEvent<HTMLInputElement>) {
-    if (newTask.length > 0) {
-      const newTaskObj: Task = { id: uuidv4(), text: newTask, done: false };
+    if (newTaskTitle.length > 0) {
+      const newTaskObj: Task = { id: uuidv4(), text: newTaskTitle, done: false };
       setTasksList([...tasksList, newTaskObj]);
     }
     setNewTask(e.target.value);
@@ -102,11 +102,11 @@ export default function ToDo() {
             <TextField
               type="text"
               variant="standard"
-              value={newTask}
+              value={newTaskTitle}
               onChange={handleChange}
-              placeholder={newTask ? " " : "please add a task"}
+              placeholder={newTaskTitle ? " " : "please add a task"}
             />
-            {/* <input type="text" value={newTask} onChange={handleChange}/> */}
+            {/* <input type="text" value={newTaskTitle} onChange={handleChange}/> */}
             <Button sx={{ mb: 4 }} variant="outlined" onClick={addTask} color="secondary">
               add
             </Button>
