@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <section id="center">
-        <Typography variant="h3">ToDo App</Typography>
+        <Typography variant="h3">E-commerce</Typography>
         <br />  
          <br />  
         <ToDo />      

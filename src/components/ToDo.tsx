@@ -7,13 +7,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Typography } from "@mui/material";
 import ToDoForm from "./ToDoForm";
- 
+import { type Inputs } from "./ToDoForm";
 
 
 function getFilteredTasks(filter: 'all' | 'active' | 'completed', tasksList: Task[]) {
@@ -28,30 +29,24 @@ function getFilteredTasks(filter: 'all' | 'active' | 'completed', tasksList: Tas
 }
 
 type Task = {
-    id: number, // new date - генерим id, ИЛИ uuid (библиотека)
-    text: string,
-    done: boolean
-  }
-  
+  id: number, // new date - генерим id, ИЛИ uuid (библиотека)
+  text: string,
+  done: boolean
+}
+
 export default function ToDo() {
-  const [newTask, setNewTask] = useState('');
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [checked, setChecked] = useState([0]);
   const [filter, setFilter] = useState('all')
 
-  function addTask(e: React.ChangeEvent<HTMLInputElement>) {
-    if (newTask.length > 0) { 
-      const newTaskObj: Task = {id: new Date(), text: newTask, done: false};
+  function addTask(task: Inputs) {
+    if (task.title.length > 0) { 
+      const newTaskObj: Task = {id: new Date(), text: task.title, done: false};
       setTasksList([...tasksList, newTaskObj])
     } 
-    setNewTask(e.target.value)
+    // setNewTask(e.target.value)
   }
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setNewTask(e.target.value)
-    // if (tasksList.length == 0) {
-    //   <p>no tasks</p>
-    // }
-  }
+  
   function removeTask(taskToRemove: Task) {
     setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id))
   }
@@ -82,14 +77,10 @@ export default function ToDo() {
 
   return (
     <>
-      <ToDoForm />
-      <TextField type='text' variant="standard" value={newTask} onChange={handleChange} placeholder = {newTask ? " " : "please add a task"}/>
-      {/* <input type="text" value={newTask} onChange={handleChange}/> */}
-      <Button variant="outlined" onClick={addTask} color="secondary" >add</Button>
-      {/* <button onClick={addTask}>add</button> */}
-      {/* <ol>
-        {tasksList.map((task) =>  <li><div className="card">{task}</div></li>)}
-      </ol>  */}
+      <ToDoForm onAddTask={addTask}/>
+
+      <Divider />
+
       <br></br>
       <br></br>
       <TaskFilter filterAll={() => handleFilter('all')} filterActive={() => handleFilter('active')} filterCompleted={() => handleFilter('completed')}/>
@@ -134,7 +125,7 @@ export default function ToDo() {
           );
         })}
       </List>
-         : <Typography variant="h5">no tasks yet</Typography>}
+        : <Typography variant="h5">no tasks yet</Typography>}
     </>
   )
 }
