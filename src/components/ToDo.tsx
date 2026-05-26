@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TaskFilter from "./Filter";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import { Typography } from "@mui/material";
-import ListItem from "./ListItem";
-import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Typography } from "@mui/material";
+import ToDoForm from "./ToDoForm";
+import { type Inputs } from "./ToDoForm";
 
 
 
@@ -29,31 +33,25 @@ function getFilteredTasks(
   }
 }
 
-export type Task = {
-  id: string; // new date - генерим id, ИЛИ uuid (библиотека)
-  text: string;
-  done: boolean;
-};
+type Task = {
+  id: number, // new date - генерим id, ИЛИ uuid (библиотека)
+  text: string,
+  done: boolean
+}
 
 export default function ToDo() {
-  const [newTaskTitle, setNewTask] = useState("");
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [checked, setChecked] = useState<string[]>([]);
   const [filter, setFilter] = useState("all");
 
-  function addTask(e: React.ChangeEvent<HTMLInputElement>) {
-    if (newTaskTitle.length > 0) {
-      const newTaskObj: Task = { id: uuidv4(), text: newTaskTitle, done: false };
-      setTasksList([...tasksList, newTaskObj]);
-    }
-    setNewTask(e.target.value);
+  function addTask(task: Inputs) {
+    if (task.title.length > 0) { 
+      const newTaskObj: Task = {id: new Date(), text: task.title, done: false};
+      setTasksList([...tasksList, newTaskObj])
+    } 
+    // setNewTask(e.target.value)
   }
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setNewTask(e.target.value);
-    // if (tasksList.length == 0) {
-    //   <p>no tasks</p>
-    // }
-  }
+  
   function removeTask(taskToRemove: Task) {
     setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
   }
@@ -84,7 +82,9 @@ export default function ToDo() {
   return (
     <>
       <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
-      
+      <ToDoForm onAddTask={addTask}/>
+
+      <Divider />
      
         <Stack
           direction="column"
