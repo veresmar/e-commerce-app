@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import TaskFilter from "./Filter";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -17,14 +18,18 @@ import ToDoForm from "./ToDoForm";
 import { type Inputs } from "./ToDoForm";
 
 
-function getFilteredTasks(filter: 'all' | 'active' | 'completed', tasksList: Task[]) {
-  
-  if (filter == 'completed') {
-    return tasksList.filter((task) => task.done == true)
-  } else if (filter == 'active') {
-     return tasksList.filter((task) => task.done == false)
+
+type Filter =  "all" | "active" | "completed";
+function getFilteredTasks(
+  filter: Filter, // filter — variable name,  Filter — variable type
+  tasksList: Task[],
+) {
+  if (filter == "completed") {
+    return tasksList.filter((task) => task.done == true);
+  } else if (filter == "active") {
+    return tasksList.filter((task) => task.done == false);
   } else {
-    return tasksList
+    return tasksList;
   }
 }
 
@@ -36,8 +41,8 @@ type Task = {
 
 export default function ToDo() {
   const [tasksList, setTasksList] = useState<Task[]>([]);
-  const [checked, setChecked] = useState([0]);
-  const [filter, setFilter] = useState('all')
+  const [checked, setChecked] = useState<string[]>([]);
+  const [filter, setFilter] = useState("all");
 
   function addTask(task: Inputs) {
     if (task.title.length > 0) { 
@@ -48,10 +53,10 @@ export default function ToDo() {
   }
   
   function removeTask(taskToRemove: Task) {
-    setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id))
+    setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
   }
 
-  const handleToggle = (task: Task) => () => {
+  const handleToggle = (task: Task) => {
     // const currentIndex = checked.indexOf(task.id);
     // const newChecked = [...checked];
     // if (currentIndex === -1) {
@@ -62,70 +67,80 @@ export default function ToDo() {
     // }
     // setChecked(newChecked);
   };
-  
+
   const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
-  function handleFilter(filterButton) { // filterButton = 'all' | 'active' | 'completed'
-   
-    setFilter(filterButton)
+  function handleFilter(filter: Filter) {
+    // filterButton = 'all' | 'active' | 'completed'
+    setFilter(filter); // passes the value into useState
   }
-  console.log(filteredTasksList)
+  console.log(filteredTasksList);
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(tasksList));
+    localStorage.setItem("todos", JSON.stringify(tasksList));
   }, [tasksList]);
-
 
   return (
     <>
+      <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
       <ToDoForm onAddTask={addTask}/>
 
       <Divider />
+     
+        <Stack
+          direction="column"
+          component="main"
+          spacing={2}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: '50%',
+            margin: '0 auto',
+          }}
+        >
 
-      <br></br>
-      <br></br>
-      <TaskFilter filterAll={() => handleFilter('all')} filterActive={() => handleFilter('active')} filterCompleted={() => handleFilter('completed')}/>
-      <br></br>
+          <Stack component="section" direction="row">
+            <TextField
+              type="text"
+              variant="standard"
+              value={newTaskTitle}
+              onChange={handleChange}
+              placeholder={newTaskTitle ? " " : "please add a task"}
+            />
+            {/* <input type="text" value={newTaskTitle} onChange={handleChange}/> */}
+            <Button sx={{ mb: 4 }} variant="outlined" onClick={addTask} color="secondary">
+              add
+            </Button>
+          </Stack>
 
-      {filteredTasksList.length > 0 ?
-      <List dense component="div" role="list">
-         {filteredTasksList.map((task) => {
-          const labelId = `transfer-list-item-${task}-label`;
-
-          return (
-            <ListItemButton
-              key={task.id}
-              role="listitem"
-              onClick={() => handleToggle(task)} // - нажатие на всю поверхность задачи
-              sx={{
-                backgroundColor: "#ffccff",
-                "&:hover": {
-                  backgroundColor: "#ffb3ff",
-                  textDecoration: 'line-through'
-                }
-              }}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.includes(task)}
-                  tabIndex={-1}
-                  disableRipple
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item: ${task.text}`} />
-    
-              <Button onClick={() => removeTask(task)} color="secondary" >
-                <Tooltip title="Delete">
-                  <IconButton>
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              </Button>
-
-            </ListItemButton>
-          );
-        })}
-      </List>
-        : <Typography variant="h5">no tasks yet</Typography>}
+          <Stack component="section">
+            <TaskFilter
+              filterAll={() => handleFilter("all")}
+              filterActive={() => handleFilter("active")}
+              filterCompleted={() => handleFilter("completed")}
+            />
+          </Stack>
+          <Stack component="section">
+            {filteredTasksList.length > 0 ? (
+              <List dense component="div" role="list">
+                {filteredTasksList.map((task) => (
+                  // <ListItem id={task.id} text={task.text} done={task.done} />
+                  <ListItem
+                    task={task}
+                    handleToggle={handleToggle}
+                    removeTask={removeTask}
+                    checked={checked}
+                  /> // { task: { id: string, text: string; done: boolean; } }
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body1">no tasks yet</Typography>
+            )}
+          </Stack>
+        </Stack>
+      {/* <button onClick={addTask}>add</button> */}
+      {/* <ol>
+        {tasksList.map((task) =>  <li><div className="card">{task}</div></li>)}
+      </ol>  */}
     </>
-  )
+  );
 }
