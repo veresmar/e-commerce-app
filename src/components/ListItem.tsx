@@ -14,12 +14,13 @@ type ListItemProps = {
   handleToggle: (task: Task) => void;
   removeTask: (task: Task) => void;
   checked: string[];
+  
 };
 
 export default function ListItem(props: ListItemProps) {
   // ListItemProps.task.id - неправильно // props.task.id - правильно
   const labelId = `transfer-list-item-${props.task.id}-label`;
-
+  console.log('props img', props.task.image)
   return (
     
       <ListItemButton
@@ -41,8 +42,8 @@ export default function ListItem(props: ListItemProps) {
             disableRipple
           />
         </ListItemIcon>
-        <ListItemText id={labelId} primary={`List item: ${props.task.text}`} />
-
+        <ListItemText id={labelId} primary={`To do: ${props.task.title} ${ props.task.description}`} />
+        <img src={props.task.image} alt={props.task.title} width={200}></img>
         <Button onClick={() => props.removeTask(props.task)} color="secondary">
           <Tooltip title="Delete">
             <IconButton>
