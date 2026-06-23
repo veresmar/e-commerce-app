@@ -1,18 +1,10 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TaskFilter from "./Filter";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
+import ListItem from "./ListItem";
 import Divider from '@mui/material/Divider';
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import Stack from '@mui/material/Stack'
 import { Typography } from "@mui/material";
 import ToDoForm from "./ToDoForm";
 import { type Inputs } from "./ToDoForm";
@@ -33,10 +25,9 @@ function getFilteredTasks(
   }
 }
 
-type Task = {
-  id: number, // new date - генерим id, ИЛИ uuid (библиотека)
-  text: string,
-  done: boolean
+type Task = Inputs & {
+  id: string, // new date - генерим id, ИЛИ uuid (библиотека)
+  done?: boolean
 }
 
 export default function ToDo() {
@@ -46,31 +37,17 @@ export default function ToDo() {
 
   function addTask(task: Inputs) {
     if (task.title.length > 0) { 
-      const newTaskObj: Task = {id: new Date(), text: task.title, done: false};
+      const newTaskObj: Task = {id: uuidv4(), ...task, done: false}; // ...task - записали все поля Task
       setTasksList([...tasksList, newTaskObj])
     } 
-    // setNewTask(e.target.value)
   }
   
   function removeTask(taskToRemove: Task) {
     setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
   }
 
-  const handleToggle = (task: Task) => {
-    // const currentIndex = checked.indexOf(task.id);
-    // const newChecked = [...checked];
-    // if (currentIndex === -1) {
-    //   newChecked.push(task);
-    //   console.log('check')
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
-    // setChecked(newChecked);
-  };
-
   const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
   function handleFilter(filter: Filter) {
-    // filterButton = 'all' | 'active' | 'completed'
     setFilter(filter); // passes the value into useState
   }
   console.log(filteredTasksList);
@@ -98,20 +75,7 @@ export default function ToDo() {
           }}
         >
 
-          <Stack component="section" direction="row">
-            <TextField
-              type="text"
-              variant="standard"
-              value={newTaskTitle}
-              onChange={handleChange}
-              placeholder={newTaskTitle ? " " : "please add a task"}
-            />
-            {/* <input type="text" value={newTaskTitle} onChange={handleChange}/> */}
-            <Button sx={{ mb: 4 }} variant="outlined" onClick={addTask} color="secondary">
-              add
-            </Button>
-          </Stack>
-
+          
           <Stack component="section">
             <TaskFilter
               filterAll={() => handleFilter("all")}
@@ -123,13 +87,12 @@ export default function ToDo() {
             {filteredTasksList.length > 0 ? (
               <List dense component="div" role="list">
                 {filteredTasksList.map((task) => (
-                  // <ListItem id={task.id} text={task.text} done={task.done} />
+                  
                   <ListItem
-                    task={task}
-                    handleToggle={handleToggle}
+                    task={task}      
                     removeTask={removeTask}
                     checked={checked}
-                  /> // { task: { id: string, text: string; done: boolean; } }
+                  />
                 ))}
               </List>
             ) : (
@@ -137,10 +100,6 @@ export default function ToDo() {
             )}
           </Stack>
         </Stack>
-      {/* <button onClick={addTask}>add</button> */}
-      {/* <ol>
-        {tasksList.map((task) =>  <li><div className="card">{task}</div></li>)}
-      </ol>  */}
     </>
   );
 }

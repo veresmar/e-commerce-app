@@ -1,12 +1,8 @@
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
-import { Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 import { useForm, Controller, type SubmitHandler } from "react-hook-form"
-import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import { PriorityHigh } from "@mui/icons-material";
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -14,6 +10,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Dayjs } from 'dayjs'
+import ImageUploader from "./ImageUploader";
+import Autocomplete from '@mui/material/Autocomplete';
+import DropZone from "./DropZone";
 
 import Select from '@mui/material/Select';
 
@@ -35,25 +34,14 @@ type ToDoFormProps = {
 };
 
 export default function ToDoForm(props: ToDoFormProps) {
-  // const [ title, setTitle ] = useState(' ');
-  // const [ description, setDescription ] = useState(' ');
-
-  // function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
-  //     setTitle(e.target.value)
-  //   }
-  // function handleDescription(e: React.ChangeEvent<HTMLInputElement>) {
-  //     setDescription(e.target.value)
-  //   }
-
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   console.log(title, description);
-  // }
   const [priorityChoise, setPriorityChoise] = useState('Medium');
   function handleChangePriorityChoise () {
     const newChoise = event.target.value;
     setPriorityChoise(newChoise)
     console.log(newChoise)
+  }
+  function fileSelect() {
+    
   }
   const {
     register,
@@ -63,15 +51,16 @@ export default function ToDoForm(props: ToDoFormProps) {
   // как связать с useState [tasksList, setTasksList] ?
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     props.onAddTask(data);
+    console.log(data)
   }
   
-
+  const categories  = [
+  'work',
+  'personal',
+  'home'
+];
   
-  // <form onSubmit={handleSubmit}>
-  //   <TextField type='text' variant="standard" placeholder="ToDo title" onChange={handleTitle}/>
-  //   <TextField type='text' variant="standard" placeholder="ToDo description" onChange={handleDescription}/>  
-  //     <Button variant="outlined" type='submit' color="secondary">add</Button>
-  // </form>   
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box 
@@ -101,6 +90,14 @@ export default function ToDoForm(props: ToDoFormProps) {
             </ToggleButtonGroup>
             )}
         />
+        
+
+        <Autocomplete 
+          options={categories}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Category" />}
+        />
+
 
         <Controller
           name="category"
@@ -131,18 +128,30 @@ export default function ToDoForm(props: ToDoFormProps) {
             /> 
             )}
         />
-        {/* <DatePicker
-          label="Controlled picker"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
+
+        {/* <Controller
+          name="image"
+          control={control}
+          render={({ field }) => (  
+            <ImageUploader 
+              onChange={field.onChange}
+            />
+          )}
         /> */}
 
+        <Controller
+          name="image"
+          control={control}
+          render={({ field }) => (  
+            <DropZone 
+              onFileSelect={field.onChange}
+            />
+          )}
+        />
+       
         <Button variant="outlined" type='submit' color="secondary">add</Button> 
-      
       </Box>
+      
     </LocalizationProvider>
   )
 }
-
-
-// placeholder="ToDo title"
