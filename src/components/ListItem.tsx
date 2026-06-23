@@ -14,44 +14,48 @@ type ListItemProps = {
   handleToggle: (task: Task) => void;
   removeTask: (task: Task) => void;
   checked: string[];
-  
 };
 
 export default function ListItem(props: ListItemProps) {
   // ListItemProps.task.id - неправильно // props.task.id - правильно
   const labelId = `transfer-list-item-${props.task.id}-label`;
-  console.log('props img', props.task.image)
+  console.log("props img", props.task.image);
   return (
-    
-      <ListItemButton
-        key={props.task.id}
-        role="listitem"
-        onClick={() => props.handleToggle(props.task)} // - нажатие на всю поверхность задачи
-        sx={{
-          backgroundColor: "#ffccff",
-          "&:hover": {
-            backgroundColor: "#ffb3ff",
-            textDecoration: "line-through",
-          },
-        }}
-      >
-        <ListItemIcon>
-          <Checkbox
-            checked={props.checked.includes(props.task.id)}
-            tabIndex={-1}
-            disableRipple
-          />
-        </ListItemIcon>
-        <ListItemText id={labelId} primary={`To do: ${props.task.title} ${ props.task.description}`} />
-        <img src={props.task.image} alt={props.task.title} width={200}></img>
-        <Button onClick={() => props.removeTask(props.task)} color="secondary">
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </Button>
-      </ListItemButton>
-    
+    <ListItemButton
+      key={props.task.id}
+      role="listitem"
+      onClick={() => props.handleToggle(props.task)} // - нажатие на всю поверхность задачи
+      sx={{
+        backgroundColor: "#ffccff",
+        "&:hover": {
+          backgroundColor: "#ffb3ff",
+          textDecoration: "line-through",
+        },
+      }}
+    >
+      <ListItemIcon>
+        <Checkbox
+          checked={props.checked.includes(props.task.id)}
+          tabIndex={-1}
+          disableRipple
+        />
+      </ListItemIcon>
+      <ListItemText
+        id={labelId}
+        primary={`To do: ${props.task.title} ${props.task.description}`}
+      />
+      <img
+        src={URL.createObjectURL(props.task.image)}
+        alt={props.task.title}
+        width={200}
+      ></img>
+      <Button onClick={() => props.removeTask(props.task)} color="secondary">
+        <Tooltip title="Delete">
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Button>
+    </ListItemButton>
   );
 }
