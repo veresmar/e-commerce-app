@@ -2,7 +2,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import { Button, Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -19,14 +19,19 @@ type ListItemProps = {
 export default function ListItem(props: ListItemProps) {
   // ListItemProps.task.id - неправильно // props.task.id - правильно
   const labelId = `transfer-list-item-${props.task.id}-label`;
-  console.log("props img", props.task.image);
+  
   return (
     <ListItemButton
       key={props.task.id}
       role="listitem"
       onClick={() => props.handleToggle(props.task)} // - нажатие на всю поверхность задачи
       sx={{
+        borderRadius: '.4em',
         backgroundColor: "#ffccff",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 1,
         "&:hover": {
           backgroundColor: "#ffb3ff",
           textDecoration: "line-through",
@@ -40,22 +45,29 @@ export default function ListItem(props: ListItemProps) {
           disableRipple
         />
       </ListItemIcon>
+      
       <ListItemText
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: .8,
+        }}
         id={labelId}
-        primary={`To do: ${props.task.title} ${props.task.description}`}
+        primary={`Task: ${props.task.title}`}
+        secondary={props.task.description}
       />
+
       <img
         src={URL.createObjectURL(props.task.image)}
         alt={props.task.title}
-        width={200}
+        width={45}
       ></img>
-      <Button onClick={() => props.removeTask(props.task)} color="secondary">
+
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={() => props.removeTask(props.task)} color="secondary"> 
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      </Button>
     </ListItemButton>
   );
 }
