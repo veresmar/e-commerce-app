@@ -11,7 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Select from "@mui/material/Select";
-import DropZone from "./DropZone";
+import DropZone from "../ui/DropZone";
+import { Stack } from "@mui/material";
 
 type PriorityStatus = "low" | "medium" | "high";
 type Category = "work" | "personal" | "home";
@@ -31,7 +32,14 @@ type ToDoFormProps = {
 };
 
 export default function ToDoForm(props: ToDoFormProps) {
-  const { register, control, handleSubmit, watch, reset, formState: { errors } } = useForm<Inputs>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>({
     defaultValues: {
       title: "",
       description: "",
@@ -48,6 +56,7 @@ export default function ToDoForm(props: ToDoFormProps) {
     reset();
     props.onClose();
   };
+
   const watchImage = watch("image");
 
   return (
@@ -70,7 +79,7 @@ export default function ToDoForm(props: ToDoFormProps) {
           label="Title"
           error={errors.title ? true : false}
           {...register("title", {
-            required: "Title is required"
+            required: "Title is required",
           })}
           helperText={errors.title?.message}
         />
@@ -81,6 +90,7 @@ export default function ToDoForm(props: ToDoFormProps) {
           rows={3}
           multiline
           label="Description"
+          fullWidth
           {...register("description")}
         />
 
@@ -98,6 +108,7 @@ export default function ToDoForm(props: ToDoFormProps) {
                 field.onChange(value);
               }}
               aria-label="Tasks priority"
+              fullWidth
             >
               <ToggleButton value="low">Low</ToggleButton>
               <ToggleButton value="medium">Medium</ToggleButton>
@@ -110,7 +121,7 @@ export default function ToDoForm(props: ToDoFormProps) {
           name="category"
           control={control}
           render={({ field }) => (
-            <Select value={field.value} onChange={field.onChange}>
+            <Select value={field.value} onChange={field.onChange} fullWidth>
               <MenuItem value={"work"}>Work</MenuItem>
               <MenuItem value={"personal"}>Personal</MenuItem>
               <MenuItem value={"home"}>Home</MenuItem>
@@ -126,6 +137,9 @@ export default function ToDoForm(props: ToDoFormProps) {
               label="Deadline"
               value={field.value}
               onChange={field.onChange}
+              slotProps={{
+                textField: { variant: "standard", fullWidth: true },
+              }}
             />
           )}
         />
