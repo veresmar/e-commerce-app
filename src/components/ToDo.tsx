@@ -11,18 +11,21 @@ import Stack from '@mui/material/Stack'
 import { Typography } from "@mui/material";
 import ToDoForm from "./ToDoForm";
 import { type Inputs } from "./ToDoForm";
-
+import Button from "@mui/material/Button";
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
 
 
 type Filter =  "all" | "active" | "completed";
 function getFilteredTasks(
   filter: Filter, // filter — variable name,  Filter — variable type
   tasksList: Task[],
+  checked: string[]
 ) {
   if (filter == "completed") {
-    return tasksList.filter((task) => task.done == true);
+    return tasksList.filter((task) => checked.includes(task.id));
   } else if (filter == "active") {
-    return tasksList.filter((task) => task.done == false);
+    return tasksList.filter((task) => !checked.includes(task.id));
   } else {
     return tasksList;
   }
@@ -30,17 +33,24 @@ function getFilteredTasks(
 
 type Task = Inputs & {
   id: string, // new date - генерим id, ИЛИ uuid (библиотека)
-  done?: boolean
 }
 
 export default function ToDo() {
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [checked, setChecked] = useState<string[]>([]);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState<Filter>('all');
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   function addTask(task: Inputs) {
     if (task.title.length > 0) { 
-      const newTaskObj: Task = {id: uuidv4(), ...task, done: false}; // ...task - записали все поля Task
+      const newTaskObj: Task = {id: uuidv4(), ...task}; // ...task - записали все поля Task
       setTasksList([...tasksList, newTaskObj])
     } 
   }
@@ -49,7 +59,7 @@ export default function ToDo() {
     setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
   }
 
-  const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
+  const filteredTasksList = getFilteredTasks(filter, tasksList, checked); // сохраняет отфильтрованные значения, не изменяя tasksList
   function handleFilter(filter: Filter) {
     setFilter(filter); // passes the value into useState
   }
@@ -59,14 +69,26 @@ export default function ToDo() {
     localStorage.setItem("todos", JSON.stringify(tasksList));
   }, [tasksList]);
 
-  function handleCheck() {
-    console.log('checked')
+  function handleCheck(task: Task) {
+    checked.includes(task.id) ? setChecked(checked.filter((checkedTask) => task.id != checkedTask)) : setChecked([...checked, task.id])
+    console.log(task.id)
   }
   return (
     <>
-      <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
-      <ToDoForm onAddTask={addTask}/>
 
+      <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
+      <Dialog 
+        open={open} 
+        sx={{
+          "& .MuiDialog-paper": {
+            padding: '3em',
+            borderRadius: '1.2em'
+          
+          },
+        }}>
+        <ToDoForm onAddTask={addTask} onClose={handleClose} />
+      </Dialog>
+      <Button variant="outlined" color="secondary" onClick={handleClickOpen}>add new task</Button>
       <Divider />
      
         <Stack
@@ -119,6 +141,7 @@ export default function ToDo() {
                   <ListItem
                     key={task.id}
                     task={task}      
+                    handleToggle={handleCheck}
                     removeTask={removeTask}
                     checked={checked}
                   />

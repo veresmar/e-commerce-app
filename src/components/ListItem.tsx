@@ -3,7 +3,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { Tooltip, IconButton } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
 
 /** так импортируются типы, чтобы сборщик проекта игнорировал эту строчку во время сборки (билда) в один js файл */
@@ -56,12 +55,12 @@ export default function ListItem(props: ListItemProps) {
         primary={`Task: ${props.task.title}`}
         secondary={props.task.description}
       />
-
-      <img
+      {props.task.image ? <img
         src={URL.createObjectURL(props.task.image)}
         alt={props.task.title}
         width={45}
-      ></img>
+      ></img> : null}
+      
 
         <Tooltip title="Delete">
           <IconButton onClick={() => props.removeTask(props.task)} color="secondary"> 

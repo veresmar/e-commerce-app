@@ -27,6 +27,7 @@ export type Inputs = {
 
 type ToDoFormProps = {
   onAddTask: (inputs: Inputs) => void;
+  onClose: () => void;
 };
 
 export default function ToDoForm(props: ToDoFormProps) {
@@ -52,6 +53,7 @@ export default function ToDoForm(props: ToDoFormProps) {
     props.onAddTask(data);
     console.log("1 onSubmit:", data);
     reset();
+    props.onClose();
   };
   const watchImage = watch("image");
   const categories = ["work", "personal", "home"];
@@ -122,7 +124,7 @@ export default function ToDoForm(props: ToDoFormProps) {
           control={control}
           render={({ field }) => (
             <DatePicker
-              label="Controlled picker"
+              label="Deadline"
               value={field.value}
               onChange={field.onChange}
             />

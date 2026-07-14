@@ -92,7 +92,7 @@ export default function DropZone({
             <li>Type: {file.type}</li>
             <li>Size: {file.size} bytes</li>
           </ul>
-          {preview && <img src={preview} alt="" width={200} />}
+          {preview && <img src={preview} alt={file.name} width={200} />}
         </section>
       )}
     </>
