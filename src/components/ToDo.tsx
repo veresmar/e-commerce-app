@@ -16,7 +16,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 
 
-type Filter =  "all" | "active" | "completed";
+export type Filter =  "all" | "active" | "completed";
 function getFilteredTasks(
   filter: Filter, // filter — variable name,  Filter — variable type
   tasksList: Task[],
@@ -38,7 +38,7 @@ type Task = Inputs & {
 export default function ToDo() {
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [checked, setChecked] = useState<string[]>([]);
-  const [filter, setFilter] = useState<Filter>('all');
+  const [filter, setFilter] = useState<Filter>('active');
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -105,11 +105,7 @@ export default function ToDo() {
 
           
           <Stack component="section">
-            <TaskFilter
-              filterAll={() => handleFilter("all")}
-              filterActive={() => handleFilter("active")}
-              filterCompleted={() => handleFilter("completed")}
-            />
+            <TaskFilter onTaskFilterChange={handleFilter} filter={filter}/>
           </Stack>
           {/* <Controller
           name="priority"

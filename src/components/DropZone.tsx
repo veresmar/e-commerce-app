@@ -74,7 +74,7 @@ export default function DropZone({
         onDrop={handleFileDrop}
         onClick={handleClick}
       >
-        Drop image here
+        Drop your image here
         <input
           ref={inputRef}
           id="file"

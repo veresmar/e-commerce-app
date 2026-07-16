@@ -38,7 +38,7 @@ export default function ToDoForm(props: ToDoFormProps) {
     console.log(newChoise);
   }
   function fileSelect() {}
-  const { register, control, handleSubmit, watch, reset } = useForm<Inputs>({
+  const { register, control, handleSubmit, watch, reset, formState: { errors } } = useForm<Inputs>({
     defaultValues: {
       title: "",
       description: "",
@@ -75,7 +75,11 @@ export default function ToDoForm(props: ToDoFormProps) {
           type="text"
           variant="standard"
           label="Title"
-          {...register("title")}
+          error={errors.title ? true : false}
+          {...register("title", {
+            required: "Title is required"
+          })}
+          helperText={errors.title?.message}
         />
 
         <TextField
