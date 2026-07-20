@@ -12,7 +12,6 @@ import { Typography } from "@mui/material";
 import ToDoForm from "./ToDoForm";
 import { type Inputs } from "./ToDoForm";
 import Button from "@mui/material/Button";
-import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 
 
@@ -78,7 +77,7 @@ export default function ToDo() {
 
       <Typography variant="h4" sx={{ mb: 1 }}>ToDo App</Typography>
       <Dialog 
-        open={open} 
+        open={open} onClose={handleClose}
         sx={{
           "& .MuiDialog-paper": {
             padding: '3em',
