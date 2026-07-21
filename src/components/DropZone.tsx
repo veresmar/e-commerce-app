@@ -1,17 +1,27 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 
 type DropZoneProps = {
   onFileSelect: (file: File) => void;
+  initialImage: File | null;
 };
 
-export default function DropZone({ onFileSelect }: DropZoneProps) {
+export default function DropZone({
+  onFileSelect,
+  initialImage,
+}: DropZoneProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    if (initialImage) {
+      setPreview(URL.createObjectURL(initialImage));
+    }
+    setFile(initialImage);
+  }, [initialImage]);
   const handleClick = () => {
     // програмно вызываем клик по инпуту
     // inputRef.current - это input
@@ -64,7 +74,7 @@ export default function DropZone({ onFileSelect }: DropZoneProps) {
         onDrop={handleFileDrop}
         onClick={handleClick}
       >
-        Drop image here
+        Drop your image here
         <input
           ref={inputRef}
           id="file"
@@ -82,7 +92,7 @@ export default function DropZone({ onFileSelect }: DropZoneProps) {
             <li>Type: {file.type}</li>
             <li>Size: {file.size} bytes</li>
           </ul>
-          {preview && <img src={preview} alt="" width={200} />}
+          {preview && <img src={preview} alt={file.name} width={200} />}
         </section>
       )}
     </>

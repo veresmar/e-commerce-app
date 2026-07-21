@@ -2,9 +2,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import { Button, Tooltip, IconButton } from "@mui/material";
-
+import { Tooltip, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 
 /** так импортируются типы, чтобы сборщик проекта игнорировал эту строчку во время сборки (билда) в один js файл */
 import type { Task } from "./ToDo";
@@ -19,17 +19,29 @@ type ListItemProps = {
 export default function ListItem(props: ListItemProps) {
   // ListItemProps.task.id - неправильно // props.task.id - правильно
   const labelId = `transfer-list-item-${props.task.id}-label`;
-  console.log("props img", props.task.image);
+  
   return (
     <ListItemButton
       key={props.task.id}
       role="listitem"
       onClick={() => props.handleToggle(props.task)} // - нажатие на всю поверхность задачи
       sx={{
+        borderRadius: '.4em',
         backgroundColor: "#ffccff",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 2,
+        marginBottom: '.2em',
+        textDecoration: props.task.done ? "line-through" : "none",
+        textDecorationColor: "#9c27b0",
+        textDecorationThickness: "0.2em",
         "&:hover": {
-          backgroundColor: "#ffb3ff",
+          // backgroundColor: "#ffb3ff",
+          backgroundColor: "#ffccff",
           textDecoration: "line-through",
+          textDecorationColor: '#9c27b0',
+          textDecorationThickness: '0.2em',
         },
       }}
     >
@@ -40,22 +52,34 @@ export default function ListItem(props: ListItemProps) {
           disableRipple
         />
       </ListItemIcon>
+      
       <ListItemText
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: .8,
+        }}
         id={labelId}
-        primary={`To do: ${props.task.title} ${props.task.description}`}
-      />
-      <img
+        primary={`Task: ${props.task.title}`}
+        secondary={
+            <>
+              {props.task.description}
+              {`Date: ${props.task.date.format("DD.MM.YYYY")}`}
+            </>
+          }
+        />
+      {props.task.image ? <img
         src={URL.createObjectURL(props.task.image)}
         alt={props.task.title}
-        width={200}
-      ></img>
-      <Button onClick={() => props.removeTask(props.task)} color="secondary">
+        width={45}
+      ></img> : null}
+      
+
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={() => props.removeTask(props.task)} color="secondary"> 
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      </Button>
     </ListItemButton>
   );
 }
