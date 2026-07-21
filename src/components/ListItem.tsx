@@ -4,7 +4,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { Tooltip, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import dayjs from "dayjs";
 /** так импортируются типы, чтобы сборщик проекта игнорировал эту строчку во время сборки (билда) в один js файл */
 import type { Task } from "./ToDo";
 
@@ -12,7 +12,6 @@ type ListItemProps = {
   task: Task;
   handleToggle: (task: Task) => void;
   removeTask: (task: Task) => void;
-  checked: string[];
 };
 
 export default function ListItem(props: ListItemProps) {
@@ -45,7 +44,7 @@ export default function ListItem(props: ListItemProps) {
     >
       <ListItemIcon>
         <Checkbox
-          checked={props.checked.includes(props.task.id)}
+          checked={props.task.done}
           tabIndex={-1}
           disableRipple
         />
@@ -62,7 +61,7 @@ export default function ListItem(props: ListItemProps) {
         secondary={
           <>
             {props.task.description}
-            {`Date: ${props.task.date.format("DD.MM.YYYY")}`}
+            {`Date: ${dayjs(props.task.date).format("DD.MM.YYYY")}`}
           </>
         }
       />

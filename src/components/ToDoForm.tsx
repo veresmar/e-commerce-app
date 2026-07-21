@@ -147,7 +147,9 @@ export default function ToDoForm(props: ToDoFormProps) {
             <DatePicker
               label="Deadline"
               value={field.value}
-              onChange={field.onChange}
+              onChange={(value) => 
+                field.onChange(value?.toISOString())
+              }
               slotProps={{
                 textField: { variant: "standard", fullWidth: true },
               }}
