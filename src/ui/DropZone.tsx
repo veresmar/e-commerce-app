@@ -18,10 +18,13 @@ export default function DropZone({
 
   useEffect(() => {
     if (initialImage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPreview(URL.createObjectURL(initialImage));
     }
+
     setFile(initialImage);
   }, [initialImage]);
+
   const handleClick = () => {
     // програмно вызываем клик по инпуту
     // inputRef.current - это input
