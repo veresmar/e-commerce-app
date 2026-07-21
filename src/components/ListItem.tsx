@@ -5,6 +5,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Tooltip, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+
 /** так импортируются типы, чтобы сборщик проекта игнорировал эту строчку во время сборки (билда) в один js файл */
 import type { Task } from "./ToDo";
 
@@ -30,7 +31,8 @@ export default function ListItem(props: ListItemProps) {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 1,
+        gap: 2,
+        marginBottom: '.2em',
         textDecoration: props.task.done ? "line-through" : "none",
         textDecorationColor: "#9c27b0",
         textDecorationThickness: "0.2em",
@@ -59,8 +61,13 @@ export default function ListItem(props: ListItemProps) {
         }}
         id={labelId}
         primary={`Task: ${props.task.title}`}
-        secondary={props.task.description}
-      />
+        secondary={
+            <>
+              {props.task.description}
+              {`Date: ${props.task.date.format("DD.MM.YYYY")}`}
+            </>
+          }
+        />
       {props.task.image ? <img
         src={URL.createObjectURL(props.task.image)}
         alt={props.task.title}

@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-// import Controller from "react-hook-form";
-// import ToggleButton from '@mui/material/ToggleButton';
-// import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { v4 as uuidv4 } from "uuid";
 import TaskFilter from "./Filter";
 import List from '@mui/material/List';
@@ -81,8 +78,13 @@ export default function ToDo() {
         sx={{
           "& .MuiDialog-paper": {
             padding: '3em',
-            borderRadius: '1.2em'
-          
+            borderRadius: '1.2em',
+            "@media (max-width:650px)": {
+              padding: "1.5em",
+              margin: "1em",
+              width: "100%",
+              
+            },
           },
         }}>
         <ToDoForm onAddTask={addTask} onClose={handleClose} />
@@ -97,40 +99,19 @@ export default function ToDo() {
           sx={{
             justifyContent: "center",
             alignItems: "center",
-            width: '50%',
+            minWidth: 'max-content',
+            width: '100%',
             margin: '0 auto',
           }}
         >
-
-          
+       
           <Stack component="section">
             <TaskFilter onTaskFilterChange={handleFilter} filter={filter}/>
           </Stack>
-          {/* <Controller
-          name="priority"
-          control={control}
-          render={({ field }) => (   // через перемен. field предоставл. допступ к полю priority
-          
-            <ToggleButtonGroup
-              color="secondary"
-              value={priorityChoise}
-              exclusive
-              onChange={handleChangePriorityChoise}
-              aria-label="Tasks priority"
-            >
-              <ToggleButton value="Low">Low</ToggleButton>
-              <ToggleButton value="Medium">Medium</ToggleButton>
-              <ToggleButton value="High">High</ToggleButton>
-            </ToggleButtonGroup>
-            )}
-        /> */}
+         
 
-
-
-          <Stack component="section">
-           
-            {filteredTasksList.length > 0 ? (
-              
+          <Stack component="section">          
+            {filteredTasksList.length > 0 ? (          
               <List dense component="div" role="list">
                 {filteredTasksList.map((task) => (
                   <ListItem

@@ -66,7 +66,8 @@ export default function ToDoForm(props: ToDoFormProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          width: 400,
+          width: "100%",
+          maxWidth: 400,
           gap: 2,
         }}
         onSubmit={handleSubmit(onSubmit)}
@@ -134,16 +135,6 @@ export default function ToDoForm(props: ToDoFormProps) {
             />
           )}
         />
-
-        {/* <Controller
-          name="image"
-          control={control}
-          render={({ field }) => (  
-            <ImageUploader 
-              onChange={field.onChange}
-            />
-          )}
-        /> */}
         {/* // DropZone заполнит поле формы "image" с помощью пропса onFileSelect*/}
         <Controller
           name="image"
@@ -152,7 +143,6 @@ export default function ToDoForm(props: ToDoFormProps) {
             <DropZone onFileSelect={field.onChange} initialImage={watchImage} />
           )}
         />
-
         <Button variant="outlined" type="submit" color="secondary">
           add
         </Button>
