@@ -31,13 +31,6 @@ type ToDoFormProps = {
 };
 
 export default function ToDoForm(props: ToDoFormProps) {
-  const [priorityChoise, setPriorityChoise] = useState("Medium");
-  function handleChangePriorityChoise() {
-    const newChoise = event.target.value;
-    setPriorityChoise(newChoise);
-    console.log(newChoise);
-  }
-  function fileSelect() {}
   const { register, control, handleSubmit, watch, reset, formState: { errors } } = useForm<Inputs>({
     defaultValues: {
       title: "",
@@ -56,7 +49,6 @@ export default function ToDoForm(props: ToDoFormProps) {
     props.onClose();
   };
   const watchImage = watch("image");
-  const categories = ["work", "personal", "home"];
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -100,14 +92,16 @@ export default function ToDoForm(props: ToDoFormProps) {
           ) => (
             <ToggleButtonGroup
               color="secondary"
-              value={priorityChoise}
+              value={field.value}
               exclusive
-              onChange={handleChangePriorityChoise}
+              onChange={(_event, value) => {
+                field.onChange(value);
+              }}
               aria-label="Tasks priority"
             >
-              <ToggleButton value="Low">Low</ToggleButton>
-              <ToggleButton value="Medium">Medium</ToggleButton>
-              <ToggleButton value="High">High</ToggleButton>
+              <ToggleButton value="low">Low</ToggleButton>
+              <ToggleButton value="medium">Medium</ToggleButton>
+              <ToggleButton value="high">High</ToggleButton>
             </ToggleButtonGroup>
           )}
         />

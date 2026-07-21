@@ -27,7 +27,7 @@ function getFilteredTasks(
   }
 }
 
-type Task = Inputs & {
+export type Task = Inputs & {
   id: string, // new date - генерим id, ИЛИ uuid (библиотека)
 }
 
@@ -102,6 +102,10 @@ export default function ToDo() {
             minWidth: 'max-content',
             width: '100%',
             margin: '0 auto',
+
+            "@media (max-width:650px)": {
+              minWidth: '100%',
+            }
           }}
         >
        
