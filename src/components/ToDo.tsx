@@ -13,7 +13,7 @@ import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-type Filter = "all" | "active" | "completed";
+export type Filter = "all" | "active" | "completed";
 function getFilteredTasks(
   filter: Filter, // filter — variable name,  Filter — variable type
   tasksList: Task[],
@@ -30,6 +30,7 @@ function getFilteredTasks(
 
 export type Task = Inputs & {
   id: string; // new date - генерим id, ИЛИ uuid (библиотека)
+  done: boolean;
 };
 
 export default function ToDo() {
