@@ -17,25 +17,36 @@ export type Filter = "all" | "active" | "completed";
 function getFilteredTasks(
   filter: Filter, // filter — variable name,  Filter — variable type
   tasksList: Task[],
-  checked: string[],
 ) {
-  if (filter == "completed") {
-    return tasksList.filter((task) => checked.includes(task.id));
-  } else if (filter == "active") {
-    return tasksList.filter((task) => !checked.includes(task.id));
-  } else {
-    return tasksList;
+  if (filter === "completed") {
+    return tasksList.filter((task) => task.done);
+  } 
+  if (filter === "active") {
+    return tasksList.filter((task) => !task.done);
   }
+  return tasksList;
 }
 
-export type Task = Inputs & {
-  id: string; // new date - генерим id, ИЛИ uuid (библиотека)
+// export type Task = Inputs & {
+//   id: string; // new date - генерим id, ИЛИ uuid (библиотека)
+//   done: boolean;
+// };
+
+export type Task = Omit<Inputs, "date"> & {
+  id: string;
+  date: string;
   done: boolean;
 };
 
 export default function ToDo() {
-  const [tasksList, setTasksList] = useState<Task[]>([]);
-  const [checked, setChecked] = useState<string[]>([]);
+  const [tasksList, setTasksList] = useState<Task[]>(() => {
+    const savedTasks = localStorage.getItem("todos");
+
+    return savedTasks
+      ? JSON.parse(savedTasks)
+      : [];
+  });
+  // const [checked, setChecked] = useState<string[]>([]);
   const [filter, setFilter] = useState<Filter>("active");
   const [open, setOpen] = useState(false);
 
@@ -48,8 +59,8 @@ export default function ToDo() {
 
   function addTask(task: Inputs) {
     if (task.title.length > 0) {
-      const newTaskObj: Task = { ...task, id: uuidv4(), done: false  }; // ...task - записали все поля Task
-      setTasksList([...tasksList, newTaskObj]);
+      const newTaskObj: Task = { ...task, id: uuidv4(),  date: task.date.toISOString(), done: false  }; // ...task - записали все поля Task
+      setTasksList((prev) => [...prev, newTaskObj]);
     }
   }
 
@@ -57,21 +68,26 @@ export default function ToDo() {
     setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
   }
 
-  const filteredTasksList = getFilteredTasks(filter, tasksList, checked); // сохраняет отфильтрованные значения, не изменяя tasksList
+  const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
   function handleFilter(filter: Filter) {
     setFilter(filter); // passes the value into useState
   }
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(tasksList));
+    localStorage.setItem(
+      "todos",
+      JSON.stringify(tasksList)
+    );
   }, [tasksList]);
 
   function handleCheck(task: Task) {
-    if (checked.includes(task.id)) {
-      setChecked(checked.filter((checkedTask) => task.id != checkedTask));
-    } else {
-      setChecked([...checked, task.id]);
-    }
+    setTasksList((prevTasks) =>
+      prevTasks.map((item) =>
+        item.id === task.id
+          ? { ...item, done: !item.done }
+          : item
+      )
+    );
   }
 
   return (
@@ -173,7 +189,6 @@ export default function ToDo() {
                   task={task}
                   handleToggle={handleCheck}
                   removeTask={removeTask}
-                  checked={checked}
                 />
               ))}
             </List>
