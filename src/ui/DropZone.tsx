@@ -66,8 +66,12 @@ export default function DropZone({
           backgroundColor: isDragging ? "#e26be2ff" : "#eaa6eaff",
           border: isDragging ? "3px dashed #cd9ff8ff" : "3px solid  #ba8be6ff",
           cursor: "pointer",
-          padding: "4em",
+          padding: "3em",
           borderRadius: "1em",
+
+          "@media (max-width:650px)": {
+            padding: "2em",
+          }
         }}
         onDragOver={(e) => {
           e.preventDefault();

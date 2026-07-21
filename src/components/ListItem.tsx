@@ -36,7 +36,6 @@ export default function ListItem(props: ListItemProps) {
         textDecorationColor: "#9c27b0",
         textDecorationThickness: "0.2em",
         "&:hover": {
-          // backgroundColor: "#ffb3ff",
           backgroundColor: "#ffccff",
           textDecoration: "line-through",
           textDecorationColor: "#9c27b0",

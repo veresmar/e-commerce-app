@@ -5,7 +5,7 @@ import List from "@mui/material/List";
 import ListItem from "./ListItem";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import { DialogContent, DialogTitle, Typography } from "@mui/material";
+import { DialogContent, DialogTitle, Typography, Box } from "@mui/material";
 import ToDoForm from "./ToDoForm";
 import { type Inputs } from "./ToDoForm";
 import Button from "@mui/material/Button";
@@ -83,31 +83,59 @@ export default function ToDo() {
         onClose={handleClose}
         sx={{
           "& .MuiDialog-paper": {
-            padding: "3em",
+            padding: "1.8em",
+            paddingTop: "0.2em",
+            paddingBottom: "0.8em",
             borderRadius: "1.2em",
+            
             "@media (max-width:650px)": {
               padding: "1.5em",
               margin: "1em",
               width: "100%",
             },
           },
+          "& .MuiDialogContent-root": {
+            padding: '0',
+          },
+          "& .MuiPaper-root": {
+            maxHeight: "calc(100% - 24px)",
+            "@media (max-width:650px)": {
+              maxHeight: "calc(100% - 100px)",
+            }
+          },
+          "& .MuiDialog-container": {
+            backgroundColor: "#eaa6ea7d",
+            opacity: "0.1"
+          }
         }}
       >
-        <DialogTitle>Add New Task</DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={(theme) => ({
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: theme.palette.grey[500],
-          })}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: '0.5em',
+          }}
         >
-          <CloseIcon />
-        </IconButton>
+          <DialogTitle 
+            sx={(theme) => ({
+              color: theme.palette.grey[500],
+              padding: '0',
+            })}> Add New Task
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({        
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
         <DialogContent>
-          <ToDoForm onAddTask={addTask} onClose={handleClose} />
+            <ToDoForm onAddTask={addTask} onClose={handleClose} />
         </DialogContent>
       </Dialog>
       <Button variant="outlined" color="secondary" onClick={handleClickOpen}>
@@ -122,7 +150,7 @@ export default function ToDo() {
         sx={{
           justifyContent: "center",
           alignItems: "center",
-          minWidth: "max-content",
+          minWidth: "80%",
           width: "100%",
           margin: "0 auto",
 
@@ -155,4 +183,4 @@ export default function ToDo() {
       </Stack>
     </>
   );
-}
+  }
