@@ -48,7 +48,7 @@ export default function ToDo() {
 
   function addTask(task: Inputs) {
     if (task.title.length > 0) {
-      const newTaskObj: Task = { id: uuidv4(), ...task }; // ...task - записали все поля Task
+      const newTaskObj: Task = { ...task, id: uuidv4(), done: false  }; // ...task - записали все поля Task
       setTasksList([...tasksList, newTaskObj]);
     }
   }
