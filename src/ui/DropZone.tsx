@@ -63,14 +63,22 @@ export default function DropZone({
       <Box
         component="div"
         sx={{
-          backgroundColor: isDragging ? "#e26be2ff" : "#eaa6eaff",
-          border: isDragging ? "3px dashed #cd9ff8ff" : "3px solid  #ba8be6ff",
+          backgroundColor: isDragging ? "#38b764" : "#2b2f4a",
+          color: isDragging ? "#0d0e18" : "#f4f4f0",
+          border: isDragging
+            ? "3px dashed #0d0e18"
+            : "3px solid #0d0e18",
+          boxShadow: "4px 4px 0 0 #0d0e18",
           cursor: "pointer",
-          padding: "3em",
-          borderRadius: "1em",
+          padding: "2.4em",
+          borderRadius: 0,
+          fontFamily: '"Press Start 2P", monospace',
+          fontSize: "0.6rem",
+          lineHeight: 1.8,
+          textAlign: "center",
 
           "@media (max-width:650px)": {
-            padding: "2em",
+            padding: "1.6em",
           }
         }}
         onDragOver={(e) => {
