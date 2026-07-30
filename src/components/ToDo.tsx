@@ -87,8 +87,8 @@ export default function ToDo() {
             padding: "1.8em",
             paddingTop: "0.2em",
             paddingBottom: "0.8em",
-            borderRadius: "1.2em",
-            
+            borderRadius: 0,
+
             "@media (max-width:650px)": {
               padding: "1.5em",
               margin: "1em",
@@ -105,8 +105,7 @@ export default function ToDo() {
             }
           },
           "& .MuiDialog-container": {
-            backgroundColor: "#eaa6ea7d",
-            opacity: "0.1"
+            backgroundColor: "rgba(13, 14, 24, 0.6)",
           }
         }}
       >

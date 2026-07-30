@@ -25,20 +25,25 @@ export default function ListItem(props: ListItemProps) {
       role="listitem"
       onClick={() => props.handleToggle(props.task)} // - нажатие на всю поверхность задачи
       sx={{
-        borderRadius: ".4em",
-        backgroundColor: "#ffccff",
+        borderRadius: 0,
+        backgroundColor: "#2b2f4a",
+        border: "3px solid #0d0e18",
+        boxShadow: "4px 4px 0 0 #0d0e18",
+        color: "#f4f4f0",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         gap: 2,
-        marginBottom: ".2em",
+        marginBottom: "12px",
         textDecoration: props.task.done ? "line-through" : "none",
-        textDecorationColor: "#9c27b0",
+        textDecorationColor: "#38b764",
         textDecorationThickness: "0.2em",
+        transition: "transform 80ms steps(2), box-shadow 80ms steps(2)",
         "&:hover": {
-          backgroundColor: "#ffccff",
-          textDecoration: "line-through",
-          textDecorationColor: "#9c27b0",
+          backgroundColor: "#3a3f63",
+          boxShadow: "6px 6px 0 0 #0d0e18",
+          transform: "translate(-2px, -2px)",
+          textDecorationColor: "#38b764",
           textDecorationThickness: "0.2em",
         },
       }}
