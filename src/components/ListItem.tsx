@@ -2,9 +2,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import { Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton, Stack, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 /** так импортируются типы, чтобы сборщик проекта игнорировал эту строчку во время сборки (билда) в один js файл */
 import type { Task } from "./ToDo";
 
@@ -18,28 +17,37 @@ type ListItemProps = {
 export default function ListItem(props: ListItemProps) {
   // ListItemProps.task.id - неправильно // props.task.id - правильно
   const labelId = `transfer-list-item-${props.task.id}-label`;
-
+  const priorityIcons = {
+    low: "🟢",
+    medium: "🟡",
+    high: "🔴",
+  };
   return (
     <ListItemButton
       key={props.task.id}
       role="listitem"
       onClick={() => props.handleToggle(props.task)} // - нажатие на всю поверхность задачи
       sx={{
-        borderRadius: ".4em",
-        backgroundColor: "#ffccff",
+        maxWidth: '99%',
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         gap: 2,
-        marginBottom: ".2em",
-        textDecoration: props.task.done ? "line-through" : "none",
-        textDecorationColor: "#9c27b0",
-        textDecorationThickness: "0.2em",
+        marginBottom: ".6em",
+        backgroundColor: "#2b2f4a",
+        border: "3px solid #0d0e18",
+        boxShadow: "2px 2px 0 0 #0d0e18",
+        transition: "transform 80ms steps(2), box-shadow 80ms steps(2)",
+        
+        
         "&:hover": {
-          backgroundColor: "#ffccff",
-          textDecoration: "line-through",
-          textDecorationColor: "#9c27b0",
-          textDecorationThickness: "0.2em",
+          // textDecoration: props.task.done ? "none" : "line-through",
+          textDecorationThickness: "2em",
+          textDecorationColor: "#7eb738ff",
+          backgroundColor: "#495190ff",
+          boxShadow: "6px 6px 0 0 #0d0e18",
+          transform: "translate(-2px, -2px)",
+          
         },
       }}
     >
@@ -54,23 +62,40 @@ export default function ListItem(props: ListItemProps) {
       <ListItemText
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           gap: 0.8,
+          
         }}
         id={labelId}
-        primary={`Task: ${props.task.title}`}
-        secondary={
+        primary={
           <>
-            {props.task.description}
-            {`Date: ${props.task.date.format("DD.MM.YYYY")}`}
+            {priorityIcons[props.task.priority]} Task: {props.task.title}
           </>
         }
+        secondary={
+          <Stack spacing={0.5}>
+            <Typography variant="body2">
+              {props.task.description}
+            </Typography>
+
+            <Stack direction="row" spacing={2}>
+              <Typography variant="caption">
+                {props.task.date.format("DD.MM.YYYY")}
+              </Typography>
+
+              <Typography variant="caption">
+                {props.task.category}
+              </Typography>
+            </Stack>
+          </Stack>
+        }
       />
+      
       {props.task.image ? (
         <img
           src={URL.createObjectURL(props.task.image)}
           alt={props.task.title}
-          width={45}
+          width={55}
         ></img>
       ) : null}
 

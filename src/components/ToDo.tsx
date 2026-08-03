@@ -77,36 +77,35 @@ export default function ToDo() {
   return (
     <>
       <Typography variant="h4" sx={{ mb: 1 }}>
-        ToDo App
+        GET STUFF DONE
       </Typography>
       <Dialog
         open={open}
         onClose={handleClose}
         sx={{
           "& .MuiDialog-paper": {
-            padding: "1.8em",
-            paddingTop: "0.2em",
-            paddingBottom: "0.8em",
-            borderRadius: "1.2em",
+            padding: "2em",
+            paddingTop: "1em",
+            paddingBottom: "1.5em",
+            borderRadius: 0,
             
             "@media (max-width:650px)": {
               padding: "1.5em",
-              margin: "1em",
+              paddingTop: "0.35em",
+              paddingBottom: "0em",
+              margin: ".4em",
               width: "100%",
             },
           },
           "& .MuiDialogContent-root": {
             padding: '0',
           },
-          "& .MuiPaper-root": {
+          "& .MuiPaper-root": { // Dialog ToDo form (modal window)
             maxHeight: "calc(100% - 24px)",
-            "@media (max-width:650px)": {
-              maxHeight: "calc(100% - 100px)",
-            }
+            width: '35em',
           },
           "& .MuiDialog-container": {
-            backgroundColor: "#eaa6ea7d",
-            opacity: "0.1"
+            backgroundColor: "rgba(13, 14, 24, 0.6)",
           }
         }}
       >
