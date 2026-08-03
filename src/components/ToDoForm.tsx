@@ -13,6 +13,7 @@ import Select from "@mui/material/Select";
 import DropZone from "../ui/DropZone";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { Typography } from "@mui/material";
 
 type PriorityStatus = "low" | "medium" | "high";
 type Category = "work" | "personal" | "home";
@@ -101,7 +102,7 @@ export default function ToDoForm(props: ToDoFormProps) {
             { field }, // через перемен. field предоставл. допступ к полю priority
           ) => (
             <FormControl>
-              <FormLabel sx={{ typography: "caption", mb: 0.5 }}>
+              <FormLabel sx={{  mb: 0.5 }}>         
                 Priority
               </FormLabel>
               <ToggleButtonGroup
@@ -128,8 +129,8 @@ export default function ToDoForm(props: ToDoFormProps) {
           control={control}
           render={({ field }) => (
             <FormControl>
-              <FormLabel sx={{ typography: "caption", mb: 0.5 }}>
-                Category
+               <FormLabel sx={{  mb: 0.5 }}>         
+                  Category 
               </FormLabel>
               <Select value={field.value} onChange={field.onChange} fullWidth>
                 <MenuItem value={"work"}>Work</MenuItem>
