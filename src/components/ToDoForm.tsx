@@ -13,7 +13,6 @@ import Select from "@mui/material/Select";
 import DropZone from "../ui/DropZone";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { Typography } from "@mui/material";
 
 type PriorityStatus = "low" | "medium" | "high";
 type Category = "work" | "personal" | "home";
