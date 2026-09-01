@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // версия JavaScript 
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true, // строгая проверка типов
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist-server"
+  },
+  "include": ["server/**/*.ts"]
+}
