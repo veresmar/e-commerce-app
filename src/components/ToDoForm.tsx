@@ -27,7 +27,7 @@ export type Inputs = {
 };
 
 type ToDoFormProps = {
-  onAddTask: (inputs: Inputs) => void;
+  onAddTask: (inputs: Inputs) => Promise<void>;
   onClose: () => void;
 };
 
@@ -50,9 +50,8 @@ export default function ToDoForm(props: ToDoFormProps) {
     },
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    props.onAddTask(data);
-    console.log("1 onSubmit:", data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    await props.onAddTask(data);
     reset();
     props.onClose();
   };

@@ -91,9 +91,9 @@ export default function ListItem(props: ListItemProps) {
         }
       />
       
-      {props.task.image ? (
+      {props.task.imageUrl ? (
         <img
-          src={URL.createObjectURL(props.task.image)}
+          src={props.task.imageUrl}
           alt={props.task.title}
           width={55}
         ></img>
