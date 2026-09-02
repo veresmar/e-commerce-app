@@ -59,7 +59,7 @@ export default function ListItem(props: ListItemProps) {
         />
       </ListItemIcon>
 
-      <ListItemText
+      <ListItemText<"span", "div">
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -67,6 +67,7 @@ export default function ListItem(props: ListItemProps) {
           
         }}
         id={labelId}
+        slotProps={{ secondary: { component: "div" } }}
         primary={
           <>
             {priorityIcons[props.task.priority]} Task: {props.task.title}
@@ -91,9 +92,9 @@ export default function ListItem(props: ListItemProps) {
         }
       />
       
-      {props.task.image ? (
+      {props.task.imageUrl ? (
         <img
-          src={URL.createObjectURL(props.task.image)}
+          src={props.task.imageUrl}
           alt={props.task.title}
           width={55}
         ></img>
@@ -101,7 +102,10 @@ export default function ListItem(props: ListItemProps) {
 
       <Tooltip title="Delete">
         <IconButton
-          onClick={() => props.removeTask(props.task)}
+          onClick={(event) => {
+            event.stopPropagation();
+            props.removeTask(props.task);
+          }}
           color="secondary"
         >
           <DeleteIcon />

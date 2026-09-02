@@ -1,87 +1,32 @@
-## Live Demo
+# Task Manager
 
-https://e-commerce-app-ten-amber-59.vercel.app/
+React/Vite frontend with an Express REST API, Neon PostgreSQL persistence, and Cloudinary image uploads.
 
-## Features
+## Local development
 
-- Create, edit and delete tasks
-- Task filtering
-- Completion tracking
-- Image attachments
-- Form validation
-- Persistent data storage
-- Responsive Material UI design
+1. Copy `.env.example` to `.env` and fill in the Neon and Cloudinary values.
+2. Apply the table schema with `npm run db:migrate` (or run [`db/migrations/001_create_tasks.sql`](db/migrations/001_create_tasks.sql) in the Neon SQL Editor).
+3. Start the API with `npm run server` and the frontend in a second terminal with `npm run dev`.
 
-# React + TypeScript + Vite
+Vite proxies `/api` calls to `http://localhost:3000`; the frontend therefore uses the same API paths locally and after deployment.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## REST API
 
-Currently, two official plugins are available:
+- `GET /api/health` — verifies the PostgreSQL connection
+- `GET /api/tasks` — list tasks
+- `POST /api/tasks` — create a task
+- `PATCH /api/tasks/:id` — update a task (including `done`)
+- `DELETE /api/tasks/:id` — delete a task
+- `POST /api/uploads` — accepts one `image` multipart file (up to 5 MB) and returns its Cloudinary URL
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Images flow from `DropZone` to Express, where Multer validates and holds the file in memory before the server uploads it to Cloudinary. Cloudinary credentials remain server-side; the task record stores only the resulting `imageUrl`.
 
-## React Compiler
+## Vercel deployment
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Import this repository into Vercel. It will build the Vite frontend and deploy [`api/index.ts`](api/index.ts) as the Express serverless endpoint; `vercel.json` routes API subpaths to it and keeps SPA fallback for the frontend. In the Vercel project settings add the variables from `.env.example`:
 
-## Expanding the ESLint configuration
+- `DATABASE_URL` — Neon pooled connection string with `sslmode=require`
+- `CLIENT_ORIGIN` — production frontend URL (optional when frontend and API share this Vercel project)
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+Run the SQL migration once against Neon before using the deployed app.

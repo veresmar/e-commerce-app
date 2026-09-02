@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
 import TaskFilter from "./Filter";
 import List from "@mui/material/List";
 import ListItem from "./ListItem";
@@ -12,32 +12,30 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { tasksApi, uploadImage, type ApiTask } from "../api/tasks";
 
 export type Filter = "all" | "active" | "completed";
 function getFilteredTasks(
   filter: Filter, // filter — variable name,  Filter — variable type
   tasksList: Task[],
-  checked: string[],
 ) {
   if (filter == "completed") {
-    return tasksList.filter((task) => checked.includes(task.id));
+    return tasksList.filter((task) => task.done);
   } else if (filter == "active") {
-    return tasksList.filter((task) => !checked.includes(task.id));
+    return tasksList.filter((task) => !task.done);
   } else {
     return tasksList;
   }
 }
 
-export type Task = Inputs & {
-  id: string; // new date - генерим id, ИЛИ uuid (библиотека)
-  done: boolean;
-};
+export type Task = Omit<ApiTask, "date"> & { date: Inputs["date"] };
+const toTask = (task: ApiTask): Task => ({ ...task, date: dayjs(task.date) });
 
 export default function ToDo() {
   const [tasksList, setTasksList] = useState<Task[]>([]);
-  const [checked, setChecked] = useState<string[]>([]);
   const [filter, setFilter] = useState<Filter>("active");
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,31 +44,45 @@ export default function ToDo() {
     setOpen(false);
   };
 
-  function addTask(task: Inputs) {
-    if (task.title.length > 0) {
-      const newTaskObj: Task = { ...task, id: uuidv4(), done: false  }; // ...task - записали все поля Task
-      setTasksList([...tasksList, newTaskObj]);
+  useEffect(() => {
+    tasksApi.list().then((tasks) => setTasksList(tasks.map(toTask))).catch((requestError: unknown) => setError(requestError instanceof Error ? requestError.message : "Unable to load tasks."));
+  }, []);
+
+  async function addTask(task: Inputs) {
+    try {
+      setError(null);
+      const imageUrl = task.image ? await uploadImage(task.image) : null;
+      const created = await tasksApi.create({ ...task, date: task.date.format("YYYY-MM-DD"), imageUrl, done: false });
+      setTasksList((current) => [...current, toTask(created)]);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "Unable to create task.");
+      throw requestError;
     }
   }
 
-  function removeTask(taskToRemove: Task) {
-    setTasksList([...tasksList].filter((task) => taskToRemove.id != task.id));
+  async function removeTask(taskToRemove: Task) {
+    try {
+      setError(null);
+      await tasksApi.remove(taskToRemove.id);
+      setTasksList((current) => current.filter((task) => taskToRemove.id !== task.id));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "Unable to delete task.");
+    }
   }
 
-  const filteredTasksList = getFilteredTasks(filter, tasksList, checked); // сохраняет отфильтрованные значения, не изменяя tasksList
+  const filteredTasksList = getFilteredTasks(filter, tasksList); // сохраняет отфильтрованные значения, не изменяя tasksList
   function handleFilter(filter: Filter) {
     setFilter(filter); // passes the value into useState
   }
 
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(tasksList));
-  }, [tasksList]);
-
-  function handleCheck(task: Task) {
-    if (checked.includes(task.id)) {
-      setChecked(checked.filter((checkedTask) => task.id != checkedTask));
-    } else {
-      setChecked([...checked, task.id]);
+  async function handleCheck(task: Task) {
+    const done = !task.done;
+    try {
+      setError(null);
+      const updated = await tasksApi.update({ ...task, date: task.date.format("YYYY-MM-DD"), done });
+      setTasksList((current) => current.map((item) => item.id === task.id ? toTask(updated) : item));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "Unable to update task.");
     }
   }
 
@@ -142,6 +154,7 @@ export default function ToDo() {
         add new task
       </Button>
       <Divider />
+      {error && <Typography color="error" role="alert">{error}</Typography>}
 
       <Stack
         direction="column"
@@ -172,7 +185,7 @@ export default function ToDo() {
                   task={task}
                   handleToggle={handleCheck}
                   removeTask={removeTask}
-                  checked={checked}
+                  checked={tasksList.filter((task) => task.done).map((task) => task.id)}
                 />
               ))}
             </List>

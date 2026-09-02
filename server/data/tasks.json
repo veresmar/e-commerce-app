@@ -1,0 +1,13 @@
+
+[
+  {
+    "id": "1",
+    "title": "Learn REST API",
+    "description": "Connect React app to Express",
+    "priority": "high",
+    "category": "work",
+    "date": "2026-08-25",
+    "image": null,
+    "done": false
+  }
+]
