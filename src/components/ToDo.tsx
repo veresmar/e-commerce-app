@@ -173,7 +173,11 @@ export default function ToDo() {
         }}
       >
         <Stack component="section">
-          <TaskFilter onTaskFilterChange={handleFilter} filter={filter} />
+          <TaskFilter
+            onTaskFilterChange={handleFilter}
+            filter={filter}
+            completedCount={tasksList.filter((task) => task.done).length}
+          />
         </Stack>
 
         <Stack component="section">
